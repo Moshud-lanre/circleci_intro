@@ -5,18 +5,41 @@ version: 2.1
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  Print_hello:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+  # Print_hello:
+  #   # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+  #   # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+  #   docker:
+  #     - image: circleci/node:13.8.0
+  #   # Add steps to the job
+  #   # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: "Print_hello"
+  #         command: "echo Hello!"
+  save_hello_world_output:
     docker:
       - image: circleci/node:13.8.0
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
       - run:
-          name: "Print_hello"
-          command: "echo Hello!"
+          name: "save_output_into_a_file"
+          command: echo "Testing the mic"> output.txt
+      - persist_to_workspace:
+          root: /temp/dir
+          paths: 
+            - txt/output.txt
+  Print_output_file:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/dir/txt/output.txt
+      - run: 
+          name: "Print_output_file_content"
+          command: echo cat output.txt
+
   Print_world:
     docker:
       - image: circleci/node:13.8.0
@@ -32,7 +55,7 @@ jobs:
       - checkout
       - run:
           name: "Print_name"
-          command: "echo My name is ${name} "
+          command: "echo My name is << ${name} >> "
 
 
 # Invoke jobs via workflows
@@ -40,8 +63,9 @@ jobs:
 workflows:
   say-hello-workflow:
     jobs:
-      - Print_hello
-      - Print_world:
-          requires: 
-            - Print_hello
+      - save_hello_world_output
+      - Print_output_file:
+          requires:
+            - save_hello_world_output
+      - Print_world
       - Print_my_name
