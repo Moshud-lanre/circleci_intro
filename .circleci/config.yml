@@ -55,7 +55,7 @@ jobs:
       - checkout
       - run:
           name: "Print_name"
-          command: "echo My name is << ${name} >> "
+          command: "echo My name is  ${name}  "
 
 
 # Invoke jobs via workflows
