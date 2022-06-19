@@ -5,7 +5,7 @@ version: 2.1
 commands:
   print_pipeline_id:
       description:  "Prints workflow Id to the console."
-      parameters: # when this is used, there has to be a "to"and "default"as a child 
+      parameters: # when this is used, there has to be a "to"and "default"as a child , this step is used when there's need to provide input when invoked
         to:
           type: string
           default: "The workflow ID is ${CIRCLE_WORKFLOW_ID} " 
@@ -71,6 +71,19 @@ jobs:
       - run:
           name: "Print_name"
           command: "echo My name is  ${name}  "
+  Job_Failover:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run: 
+          name: "Job failure"
+          command: echo << $CIRCLE_WORKFLOW_ID >>
+      - run:
+          name: "Error message"
+          command: echo "Hello Erro! "
+          when: on_fail
+
 
 
 # Invoke jobs via workflows
@@ -84,3 +97,4 @@ workflows:
             - save_hello_world_output
       - Print_world
       - Print_my_name
+      - Job_Failover
