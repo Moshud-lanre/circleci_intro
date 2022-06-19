@@ -26,19 +26,19 @@ jobs:
           name: "save_output_into_a_file"
           command: echo "Testing the mic"> output.txt
       - persist_to_workspace:
-          root: /temp/workspace
+          root: /workspace
           paths: 
-            - txt/output.txt
+            - output.txt
   Print_output_file:
     docker:
       - image: circleci/node:13.8.0
     steps:
       - checkout
       - attach_workspace:
-          at: /tmp/workspace/txt/output.txt
+          at: /workspace
       - run: 
           name: "Print_output_file_content"
-          command: echo cat output.txt
+          command:  cat /workspace/output.txt
 
   Print_world:
     docker:
