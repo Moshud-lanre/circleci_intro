@@ -71,7 +71,7 @@ jobs:
       - run:
           name: "Print_name"
           command: "echo My name is  ${name}  "
-  Job_Failover:
+  Job_Fail:
     docker:
       - image: circleci/node:13.8.0
     steps:
@@ -97,4 +97,4 @@ workflows:
             - save_hello_world_output
       - Print_world
       - Print_my_name
-      - Job_Failover
+      - Job_Fail
