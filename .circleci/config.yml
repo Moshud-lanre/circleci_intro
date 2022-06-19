@@ -26,7 +26,7 @@ jobs:
           name: "save_output_into_a_file"
           command: echo "Testing the mic"> output.txt
       - persist_to_workspace:
-          root: /workspace
+          root: /tmp
           paths: 
             - output.txt
   Print_output_file:
@@ -35,10 +35,10 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: /workspace
+          at: /tmp
       - run: 
           name: "Print_output_file_content"
-          command:  cat /workspace/output.txt
+          command:  cat /tmp/output.txt
 
   Print_world:
     docker:
