@@ -24,7 +24,7 @@ jobs:
       - checkout
       - run:
           name: "save_output_into_a_file"
-          command: echo "Testing the mic"> output.txt
+          command: echo "Testing the mic" > /tmp/output.txt
       - persist_to_workspace:
           root: /tmp
           paths: 
